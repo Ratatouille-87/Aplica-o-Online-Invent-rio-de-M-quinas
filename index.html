@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload de Arquivos</title>
+    <link rel="stylesheet" href="Style.css">
+</head>
+<body>
+
+    <div id="content">
+        <h1>Upload de Arquivos</h1>
+        <form action="/conversao" method="post" enctype="multipart/form-data">
+            <input type="file" name="file">
+            <button type="submit">Enviar</button>
+        </form>
+        <div id="processing" style="display: none;">
+            <p>Processando arquivo... Por favor, aguarde.</p>
+        </div>
+        <script>
+            document.getElementById('uploadForm').addEventListener('submit', function() {
+                document.getElementById('processing').style.display = 'block';
+            });
+        </script>
+    </div>
+
+</body>
+</html>
