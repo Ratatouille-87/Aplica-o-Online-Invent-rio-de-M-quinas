@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const fileInfo = document.getElementById('fileInfo');
     const fileInput = document.getElementById('fileInput');
     const convertButton = document.getElementById('convertButton');
+    const processing = document.getElementById('processing');
     let file;
 
     // Prevenir comportamento padrão de arrastar e soltar para todo o corpo do documento
@@ -65,7 +66,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function convertToPDF() {
         if (file) {
-            // Executar o código para enviar o arquivo para conversão
+            // Exibir a mensagem de processamento
+            processing.style.display = 'block';
+
+            // Enviar o arquivo para conversão
             enviarArquivoParaConversao(file);
         } else {
             alert('Nenhum arquivo selecionado.');
@@ -73,10 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function enviarArquivoParaConversao(file) {
-        // Aqui você pode adicionar lógica para enviar o arquivo para o servidor para conversão
-        // Por exemplo, usando uma biblioteca como pdfkit ou pdf-lib
-
-        // Exemplo de uso de fetch:
+        // Enviar o arquivo para o servidor
         const formData = new FormData();
         formData.append('file', file);
 
@@ -89,12 +90,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('Arquivo enviado para conversão com sucesso!');
                 window.location.href = '/?mensagem=Arquivo convertido com sucesso.';
             } else {
-                alert('Ocorreu um erro ao enviar o arquivo para conversão.', error);
+                alert('Ocorreu um erro ao enviar o arquivo para conversão.');
             }
         })
         .catch(error => {
             console.error('Erro:', error);
-            alert('Ocorreu um erro ao enviar o arquivo para conversão.', error);
+            alert('Ocorreu um erro ao enviar o arquivo para conversão.');
+        })
+        .finally(() => {
+            // Ocultar a mensagem de processamento
+            processing.style.display = 'none';
         });
     }
 });
