@@ -2,7 +2,8 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const convertFileToPDF = require('./conversor');
+const conversorPath = path.join('\conversor');
+const conversor = require(conversorPath);
 
 const app = express();
 const PORT = 3000;
@@ -17,7 +18,7 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage: storage, limits: { fileSize: 10 * 1024 * 1024 } }); // Limite de 10MB para o tamanho do arquivo
+const upload = multer({ storage: storage });
 
 // Rota para lidar com o upload de arquivos
 app.post('/conversao', upload.single('file'), async (req, res) => {
@@ -30,7 +31,7 @@ app.post('/conversao', upload.single('file'), async (req, res) => {
 
     try {
         // Converter o arquivo para PDF
-        await convertFileToPDF(filePath, outputPdfPath);
+        await conversor(filePath, outputPdfPath);
 
         // Enviar o arquivo PDF convertido como resposta
         res.download(outputPdfPath, () => {
@@ -38,11 +39,14 @@ app.post('/conversao', upload.single('file'), async (req, res) => {
             fs.unlinkSync(filePath);
             fs.unlinkSync(outputPdfPath);
         });
+        res.status(200).send('Arquivo recebido e salvo com sucesso.');
     } catch (error) {
         console.error('Erro ao converter o arquivo para PDF:', error);
         res.status(500).send('Erro ao converter o arquivo para PDF.');
     }
 });
+
+
 
 // Servir os arquivos estáticos na pasta 'uploads'
 app.use(express.static('uploads'));
