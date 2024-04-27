@@ -1,8 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const content = document.getElementById('content');
     const fileInfo = document.getElementById('fileInfo');
     const fileInput = document.getElementById('fileInput');
-    const convertButton = document.getElementById('convertButton');
+    const button = document.getElementById('button');
     const processing = document.getElementById('processing');
     let file;
 
@@ -25,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.body.addEventListener('drop', handleDrop, false);
 
     // Lidar com o evento de clique no botão de conversão
-    convertButton.addEventListener('click', convertToPDF, false);
+    button.addEventListener('click', convertToPDF, false);
 
     // Lidar com o evento de alteração do arquivo de entrada
     fileInput.addEventListener('change', handleFileSelect, false);
@@ -52,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Atualizar o texto para mostrar o nome do arquivo
             fileInfo.textContent = `Arquivo selecionado: ${file.name}`;
             // Exibir o botão de conversão
-            convertButton.style.display = 'block';
+            button.style.display = 'block';
         }
     }
 
@@ -61,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Atualizar o texto para mostrar o nome do arquivo
         fileInfo.textContent = `Arquivo selecionado: ${file.name}`;
         // Exibir o botão de conversão
-        convertButton.style.display = 'block';
+        button.style.display = 'block';
     }
 
     function convertToPDF() {
@@ -81,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const formData = new FormData();
         formData.append('file', file);
 
-        fetch('/conversao', {
+        fetch('\conversao', {
             method: 'POST',
             body: formData
         })
