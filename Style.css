@@ -1,14 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&displayswap');
 
 body {
-    height: 100vh;
+    height: calc(100vh-16px);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     margin: 0;
     background-color: #27282c;
-
+    color: #fff;
+    overflow: hidden;
+    min-height: 100vh;
 }
 
 body.highlight {
@@ -16,16 +18,17 @@ body.highlight {
 }
 
 #content {
+    position: relative;
     height: 100%;
     width: 100%;
     display: flex;
     border: 2px;
     padding: 20px;
-    text-align: center;
     align-items: center;
     justify-content: center;
     flex-direction: column;
     cursor: pointer;
+    overflow: hidden;
 }
 
 #content p {
@@ -33,6 +36,10 @@ body.highlight {
 }
 
 #processing {
+    position: absolute;
+    top: 50%;
+    left: 50%; 
+    transform: translate(-50%, -50%);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -44,12 +51,13 @@ body.highlight {
     padding: 0;
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
+    color: #fff;
 }
 
 #button{
     position: relative;
     background: #fff;
-    color: #fff;
+    color: white;
     text-decoration: none;
     text-transform: uppercase;
     font-size: 1.5em;
@@ -116,4 +124,44 @@ body.highlight {
 #button:hover i::after{
     width: 20px;
     left: 80%;
+}
+
+.bubbles{
+    position: relative;
+    display: flex;
+    z-index: -1;
+}
+
+.bubbles span{
+    position: relative;
+    width: 30px;
+    height: 30px;
+    background: crimson;
+    margin: 0 4px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 10px #800000,
+    0 0 50px crimson,
+    0 0 100px crimson;
+    animation: animate 20s linear infinite;
+    animation-duration: calc(200s/var(--i));
+}
+.bubbles span:nth-child(even){
+    background: violet;
+    box-shadow: 0 0 0 10px purple,
+    0 0 50px violet,
+    0 0 100px violet;
+}
+@keyframes animate{
+    0%
+    {
+        transform: translateY(100vh) scale(0);
+    }
+    100%
+    {
+        transform: translateY(-10vh) scale(1);
+    }
+}
+
+.upload-title {
+    margin-bottom: 20px;
 }
