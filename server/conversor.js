@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const formData = new FormData();
         formData.append('file', file);
 
-        fetch('\conversao', {
+        fetch('/conversao', {
             method: 'POST',
             body: formData
         })
