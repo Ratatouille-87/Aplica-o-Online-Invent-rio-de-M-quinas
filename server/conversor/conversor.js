@@ -44,7 +44,7 @@ if (typeof window !== 'undefined') {
             e.stopPropagation();
         }
 
-        function highlight() {
+        function highlight() { 
             document.body.classList.add('highlight');
         }
 
