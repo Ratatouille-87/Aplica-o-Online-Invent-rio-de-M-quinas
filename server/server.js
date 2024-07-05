@@ -1,85 +1,59 @@
 const express = require('express');
+const cors = require('cors');
 const multer = require('multer');
 const path = require('path');
+const XLSX = require('xlsx');
 const fs = require('fs');
-const conversorPath = path.join(__dirname, 'conversor/conversor.js');
-const conversor = require(conversorPath);
-const cors = require('cors');
 
 const app = express();
-const PORT = 3000;
+const port = 3000;
 
-// Middleware para permitir todas as origens (CORS)
-app.use(cors());
+app.use(cors()); // Middleware CORS para permitir requisições de diferentes origens
 
-// Configuração do Multer para armazenamento de arquivos
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'uploads/'); // Pasta onde os arquivos serão armazenados temporariamente
+        const uploadDir = './uploads';
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir);
+        }
+        cb(null, uploadDir);
     },
     filename: function (req, file, cb) {
-        cb(null, Date.now() + path.extname(file.originalname)); // Nome do arquivo: timestamp + extensão original
+        cb(null, Date.now() + path.extname(file.originalname));
     }
 });
 
 const upload = multer({ storage: storage });
 
-// Rota para lidar com o upload de arquivos
-app.post('/conversor', upload.single('file'), async (req, res) => {
+// Rota para lidar com o upload e conversão de arquivos
+app.post('/conversor', upload.single('file'), (req, res) => {
+    const filePath = req.file.path;
+
     try {
-        if (!req.file) {
-            return res.status(400).send('Nenhum arquivo enviado.');
+        if (!fs.existsSync(filePath)) {
+            throw new Error('Arquivo não encontrado');
         }
 
-        const filePath = req.file.path;
-        const outputPdfPath = `${filePath}.pdf`;
-
-        console.log(`Arquivo enviado: ${filePath}`);
-        console.log(`Convertendo para: ${outputPdfPath}`);
-
-        const { PDFDocument } = require('pdf-lib');
-        const fs = require('fs').promises;
+        const workbook = XLSX.readFile(filePath);
+        const sheetNameList = workbook.SheetNames;
+        const jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetNameList[0]]);
         
-        async function converterParaPDF(inputPath, outputPath) {
-            const existingPdfBytes = await fs.readFile(inputPath);
-            const pdfDoc = await PDFDocument.load(existingPdfBytes);
+        const jsonFilePath = filePath.replace(path.extname(filePath), '.json');
+        fs.writeFileSync(jsonFilePath, JSON.stringify(jsonData, null, 2));
         
-            // Modificar o PDFDoc conforme necessário
-            // Exemplo: Adicionar páginas, conteúdo, etc.
-        
-            const pdfBytes = await pdfDoc.save();
-            await fs.writeFile(outputPath, pdfBytes);
-        }
-        
-        module.exports = converterParaPDF;
-
-        // Exemplo de resposta com download do arquivo convertido
-        res.download(outputPdfPath, () => {
-            // Excluir arquivos temporários após o download
+        res.download(jsonFilePath, (err) => {
+            if (err) {
+                console.error(err);
+            }
             fs.unlinkSync(filePath);
-            fs.unlinkSync(outputPdfPath);
+            fs.unlinkSync(jsonFilePath);
         });
     } catch (error) {
-        console.error('Erro ao converter o arquivo para PDF:', error);
-        res.status(500).send('Erro ao converter o arquivo para PDF.');
+        console.error('Erro ao processar o arquivo:', error);
+        res.status(500).send('Erro ao processar o arquivo');
     }
 });
 
-// Servir os arquivos estáticos na pasta 'uploads'
-app.use(express.static('uploads'));
-
-// Servir o index.html
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
-
-// Middleware para tratamento de erros
-app.use(function (err, req, res, next) {
-    console.error(err.stack);
-    res.status(500).send('Algo quebrou!');
-});
-
-// Iniciar o servidor
-app.listen(PORT, () => {
-    console.log(`Servidor rodando em http://localhost:${PORT}`);
+app.listen(port, () => {
+    console.log(`Servidor está rodando em http://localhost:${port}`);
 });
