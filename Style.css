@@ -1,7 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&displayswap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
 
 body {
-    height: calc(100vh-16px);
+    height: calc(100vh - 16px);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -22,7 +22,7 @@ body.highlight {
     height: 100%;
     width: 100%;
     display: flex;
-    border: 2px;
+    border: 2px solid #000;
     padding: 20px;
     align-items: center;
     justify-content: center;
@@ -54,7 +54,7 @@ body.highlight {
     color: #fff;
 }
 
-#button{
+#button {
     position: relative;
     background: #fff;
     color: white;
@@ -67,32 +67,32 @@ body.highlight {
     transition: 0.5s;
 }
 
-#button:hover{
+#button:hover {
     background: var(--clr);
     color: var(--clr);
     letter-spacing: 0.25em;
     box-shadow: 0 0 35px var(--clr);
 }
 
-#button::before{
+#button::before {
     content: '';
     position: absolute;
     inset: 2px;
     background: #27282c;
 }
 
-#button span{
+#button span {
     position: relative;
     z-index: 1;
 }
 
-#button i{
+#button i {
     position: absolute;
     inset: 0;
     display: block;
 }
 
-#button i::before{
+#button i::before {
     content: '';
     position: absolute;
     top: 0;
@@ -104,12 +104,12 @@ body.highlight {
     transition: 0.5s;
 }
 
-#button:hover i::before{
+#button:hover i::before {
     width: 20px;
     left: 20%;
 }
 
-#button i::after{
+#button i::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -121,18 +121,18 @@ body.highlight {
     transition: 0.5s;
 }
 
-#button:hover i::after{
+#button:hover i::after {
     width: 20px;
     left: 80%;
 }
 
-.bubbles{
+.bubbles {
     position: relative;
     display: flex;
     z-index: -1;
 }
 
-.bubbles span{
+.bubbles span {
     position: relative;
     width: 30px;
     height: 30px;
@@ -145,19 +145,19 @@ body.highlight {
     animation: animate 20s linear infinite;
     animation-duration: calc(200s/var(--i));
 }
-.bubbles span:nth-child(even){
+
+.bubbles span:nth-child(even) {
     background: violet;
     box-shadow: 0 0 0 10px purple,
     0 0 50px violet,
     0 0 100px violet;
 }
-@keyframes animate{
-    0%
-    {
+
+@keyframes animate {
+    0% {
         transform: translateY(120vh) scale(0);
     }
-    100%
-    {
+    100% {
         transform: translateY(-60vh) scale(1);
     }
 }
