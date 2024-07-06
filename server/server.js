@@ -4,6 +4,7 @@ const multer = require('multer');
 const path = require('path');
 const XLSX = require('xlsx');
 const fs = require('fs');
+const upload = multer({ dest: 'uploads/' });
 
 const app = express();
 const port = 3000;
@@ -23,10 +24,12 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage: storage });
 
 // Rota para lidar com o upload e conversão de arquivos
-app.post('/conversor', upload.single('file'), (req, res) => {
+app.post('/upload', upload.single('file'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).send('Nenhum arquivo selecionado. Por favor, selecione um arquivo para continuar.');
+    }
     const filePath = req.file.path;
 
     try {
