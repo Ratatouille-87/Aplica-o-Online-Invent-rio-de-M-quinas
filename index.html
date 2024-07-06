@@ -8,15 +8,12 @@
     <link rel="stylesheet" href="Style.css">
 </head>
 <body>
-    <div class="container"></div>
-            <h1>Upload de Arquivos</h1>
-            <p class="upload-title" id="fileInfo">Arraste e solte um arquivo para selecionar</p>
-            <form id="uploadForm" method="post">
-            <a> </a>
-                <input type="file" id="fileInput" style="display:none;">
-                <a id="button" href="#" style="--clr:#800000"><span>Converter</span><i></i></a>
-            </form>
-    </div>  
+        <h1>Upload de Arquivos</h1>
+        <p class="upload-title" id="fileInfo">Arraste e solte um arquivo para selecionar</p>
+        <form id="uploadForm" method="post">
+            <input type="file" id="fileInput" style="display:none;">
+            <button id="button" style="--clr:#800000" type="submit"><span>Converter</span><i></i></button>
+        </form>
     <div class="bubbles">
         <span style="--i:11;"></span>
         <span style="--i:14;"></span>
@@ -77,29 +74,31 @@
     </div>
     <div id="processing" style="display: none;">Processando...</div>
     
-    <script src="jspdf.min.js">
-        if (typeof window !== 'undefined') {
-            document.addEventListener('DOMContentLoaded', function() {
-                const fileInfo = document.getElementById('fileInfo');
-                const fileInput = document.getElementById('fileInput');
-                const button = document.getElementById('button');
-                const processing = document.getElementById('processing');
-                let file;
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('uploadForm').addEventListener('submit', function(e) {
+                var fileInput = document.getElementById('fileInput');
+                if (fileInput.files.length === 0) { 
+                    e.preventDefault();
+                    alert('Nenhum arquivo selecionado');
+                }
+            });
 
-                function enviarArquivoParaConversao(file) {
-                    const formData = new FormData();
-                    formData.append('file', file);
+            function enviarArquivoParaConversao(file) {
+                const formData = new FormData();
+                formData.append('file', file);
 
-                    fetch('http://localhost:3000/conversor', {
-                        method: 'POST',
-                        body: file,
-                        headers: {
-                        'Content-Type': 'application/octet-stream'
-                        }
+                fetch('http://localhost:3000/conversor', {
+                    method: 'POST',
+                    body: formData,
                 })
                 .then(response => {
                     if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    } else {
+                        alert('Arquivo enviado para conversão com sucesso!');
+                        window.location.href = '/?mensagem=Arquivo convertido com sucesso.';
                     }
                     return response.blob();
                 })
@@ -115,127 +114,81 @@
                 })
                 .catch(error => {
                     console.error('Error:', error);
+                    alert('Não foi possível enviar o arquivo para a conversão.');
+                })
+                .finally(() => {
+                    processing.style.display = 'none';
                 });
+            }
+
+            function convertToPDF() {
+                const file = fileInput.files[0];
+                if (file) {
+                    processing.style.display = 'block';
+                    enviarArquivoParaConversao(file);
+                } else {
+                    alert('Nenhum arquivo selecionado.');
                 }
+            }
 
-                function convertToPDF() {
-                    const fileInput = document.getElementById('fileInput');
-                    const file = fileInput.files[0];
-                    if (file) {
-                        enviarArquivoParaConversao(file);
-                    } else {
-                        console.error('No file selected');
-                    }
-                }
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                document.body.addEventListener(eventName, preventDefaults, false);
+            });
 
-                function verificarElementos(...elementos) {
-                    return elementos.every(el => el !== null);
-                }
+            ['dragenter', 'dragover'].forEach(eventName => {
+                document.body.addEventListener(eventName, highlight, false);
+            });
 
-                if (!verificarElementos(fileInfo, fileInput, button, processing)) {
-                    console.error('Um ou mais elementos não foram encontrados.');
-                    return;
-                }
+            ['dragleave', 'drop'].forEach(eventName => {
+                document.body.addEventListener(eventName, unhighlight, false);
+            });
 
-                // Prevenir comportamento padrão de arrastar e soltar para todo o corpo do documento
-                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-                    document.body.addEventListener(eventName, preventDefaults, false);
-                });
+            document.body.addEventListener('drop', handleDrop, false);
 
-                // Destacar a área de soltar ao arrastar o arquivo sobre ela
-                ['dragenter', 'dragover'].forEach(eventName => {
-                    document.body.addEventListener(eventName, highlight, false);
-                });
+            button.addEventListener('click', convertToPDF);
 
-                // Remover destaque ao sair da área de soltar
-                ['dragleave', 'drop'].forEach(eventName => {
-                    document.body.addEventListener(eventName, unhighlight, false);
-                });
-
-                // Lidar com o evento de soltar
-                document.body.addEventListener('drop', handleDrop, false);
-
-                // Lidar com o evento de clique no botão de conversão
-                button.addEventListener('click', convertToPDF, false);
-
-                // Lidar com o evento de alteração do arquivo de entrada
-                fileInput.addEventListener('change', handleFileSelect);
-                button.addEventListener('click', convertToPDF);
-                
-                function preventDefaults(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                }
-
-                function highlight() {
-                    document.body.classList.add('highlight');
-                }
-
-                function unhighlight() {
-                    document.body.classList.remove('highlight');
-                }
-
-                function handleDrop(e) {
-                    const dt = e.dataTransfer;
-                    const files = dt.files;
-
-                    if (files.length > 0) {
-                        file = files[0];
-                        // Atualizar o texto para mostrar o nome do arquivo
-                        fileInfo.textContent = `Arquivo selecionado: ${file.name}`;
-                        // Exibir o botão de conversão
-                        button.style.display = 'block';
-                    }
-                }
-
-                function handleFileSelect(e) {
-                    file = e.target.files[0];
-                    // Atualizar o texto para mostrar o nome do arquivo
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
                     fileInfo.textContent = `Arquivo selecionado: ${file.name}`;
-                    // Exibir o botão de conversão
                     button.style.display = 'block';
                 }
-
-                function convertToPDF() {
-                    if (file) {
-                        // Exibir a mensagem de processamento
-                        processing.style.display = 'block';
-
-                        // Enviar o arquivo para conversão
-                        enviarArquivoParaConversao(file);
-                    } else {
-                        alert('Nenhum arquivo selecionado.');
-                    }
-                }
-
-                function enviarArquivoParaConversao(file) {
-                    // Enviar o arquivo para o servidor
-                    const formData = new FormData();
-                    formData.append('file', file);
-
-                    fetch('http://localhost:3000/conversor/conversor.js', {
-                        method: 'POST',
-                        body: formData
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            alert('Arquivo enviado para conversão com sucesso!');
-                            window.location.href = '/?mensagem=Arquivo convertido com sucesso.';
-                        } else {
-                            alert('Ocorreu um erro ao enviar o arquivo para conversão.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Erro:', error);
-                        alert('Não foi possível enviar o arquivo para a conversão.');
-                    })
-                    .finally(() => {
-                        // Ocultar a mensagem de processamento
-                        processing.style.display = 'none';
-                    });
-                }
             });
-        }
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            function highlight() {
+                document.body.classList.add('highlight');
+            }
+
+            function unhighlight() {
+                document.body.classList.remove('highlight');
+            }
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+
+                if (files.length > 0) {
+                    file = files[0];
+                    fileInfo.textContent = `Arquivo selecionado: ${file.name}`;
+                    button.style.display = 'block';
+                }
+            }
+
+            // Verificar se todos os elementos necessários foram encontrados
+            if (!verificarElementos(fileInfo, fileInput, button, processing)) {
+                console.error('Um ou mais elementos não foram encontrados.');
+                return;
+            }
+
+            function verificarElementos(...elementos) {
+                return elementos.every(el => el !== null);
+            }
+        });
     </script>
 </body>
 </html>
