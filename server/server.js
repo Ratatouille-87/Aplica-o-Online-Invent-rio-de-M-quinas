@@ -13,7 +13,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        const uploadDir = './uploads';
+        const uploadDir = path.resolve(__dirname, 'uploads');
         if (!fs.existsSync(uploadDir)) {
             fs.mkdirSync(uploadDir);
         }
@@ -40,9 +40,10 @@ app.post('/upload', upload.single('file'), async (req, res) => {
             if (err) {
                 console.error(err);
                 res.status(500).send('Erro ao fazer o download do arquivo convertido.');
+            } else {
+                fs.unlinkSync(filePath); // Remove o arquivo de entrada após o download
+                fs.unlinkSync(outputPdfPath); // Remove o arquivo PDF após o download
             }
-            fs.unlinkSync(filePath); // Remove o arquivo de entrada após o download
-            fs.unlinkSync(outputPdfPath); // Remove o arquivo PDF após o download
         });
     } catch (error) {
         console.error('Erro ao processar o arquivo:', error);
