@@ -10,68 +10,70 @@
 <body>
     <h1>Upload de Arquivos</h1>
     <p class="upload-title" id="fileInfo">Arraste e solte um arquivo para selecionar</p>
-    <form form id="uploadForm" action="http://localhost:3000/upload" method="post" enctype="multipart/form-data">
-        <input type="file" id="fileInput" style="display:none;">
-        <button id="button" class="button" style="--clr:#800000" type="submit"><span>Converter</span><i></i></button>
+    <form id="uploadForm" action="http://localhost:3000/upload" method="post" enctype="multipart/form-data">
+        <input type="file" id="fileInput" name="file" style="display:none;">
+        <label for="fileInput">
+            <button id="button" class="button" style="--clr:#800000" type="submit"><span>Converter</span><i></i></button>
+        </label>
     </form>
     <div class="container">
         <div class="bubbles">
-                <span style="--i:11;"></span>
-                <span style="--i:14;"></span>
-                <span style="--i:21;"></span>
-                <span style="--i:33;"></span>
-                <span style="--i:87;"></span>
-                <span style="--i:54;"></span>
-                <span style="--i:16;"></span>
-                <span style="--i:52;"></span>
-                <span style="--i:13;"></span>
-                <span style="--i:20;"></span>
-                <span style="--i:57;"></span>
-                <span style="--i:25;"></span>
-                <span style="--i:26;"></span>
-                <span style="--i:42;"></span>
-                <span style="--i:35;"></span>
-                <span style="--i:31;"></span>
-                <span style="--i:44;"></span>
-                <span style="--i:55;"></span>
-                <span style="--i:66;"></span>
-                <span style="--i:77;"></span>
-                <span style="--i:88;"></span>
-                <span style="--i:99;"></span>
-                <span style="--i:01;"></span>
-                <span style="--i:02;"></span>
-                <span style="--i:05;"></span>
-                <span style="--i:08;"></span>
-                <span style="--i:09;"></span>
-                <span style="--i:49;"></span>
-                <span style="--i:11;"></span>
-                <span style="--i:14;"></span>
-                <span style="--i:21;"></span>
-                <span style="--i:33;"></span>
-                <span style="--i:87;"></span>
-                <span style="--i:54;"></span>
-                <span style="--i:16;"></span>
-                <span style="--i:52;"></span>
-                <span style="--i:13;"></span>
-                <span style="--i:20;"></span>
-                <span style="--i:57;"></span>
-                <span style="--i:25;"></span>
-                <span style="--i:26;"></span>
-                <span style="--i:42;"></span>
-                <span style="--i:35;"></span>
-                <span style="--i:31;"></span>
-                <span style="--i:44;"></span>
-                <span style="--i:55;"></span>
-                <span style="--i:66;"></span>
-                <span style="--i:77;"></span>
-                <span style="--i:88;"></span>
-                <span style="--i:99;"></span>
-                <span style="--i:01;"></span>
-                <span style="--i:02;"></span>
-                <span style="--i:05;"></span>
-                <span style="--i:08;"></span>
-                <span style="--i:09;"></span>
-                <span style="--i:49;"></span>
+            <span style="--i:11;"></span>
+            <span style="--i:14;"></span>
+            <span style="--i:21;"></span>
+            <span style="--i:33;"></span>
+            <span style="--i:87;"></span>
+            <span style="--i:54;"></span>
+            <span style="--i:16;"></span>
+            <span style="--i:52;"></span>
+            <span style="--i:13;"></span>
+            <span style="--i:20;"></span>
+            <span style="--i:57;"></span>
+            <span style="--i:25;"></span>
+            <span style="--i:26;"></span>
+            <span style="--i:42;"></span>
+            <span style="--i:35;"></span>
+            <span style="--i:31;"></span>
+            <span style="--i:44;"></span>
+            <span style="--i:55;"></span>
+            <span style="--i:66;"></span>
+            <span style="--i:77;"></span>
+            <span style="--i:88;"></span>
+            <span style="--i:99;"></span>
+            <span style="--i:01;"></span>
+            <span style="--i:02;"></span>
+            <span style="--i:05;"></span>
+            <span style="--i:08;"></span>
+            <span style="--i:09;"></span>
+            <span style="--i:49;"></span>
+            <span style="--i:11;"></span>
+            <span style="--i:14;"></span>
+            <span style="--i:21;"></span>
+            <span style="--i:33;"></span>
+            <span style="--i:87;"></span>
+            <span style="--i:54;"></span>
+            <span style="--i:16;"></span>
+            <span style="--i:52;"></span>
+            <span style="--i:13;"></span>
+            <span style="--i:20;"></span>
+            <span style="--i:57;"></span>
+            <span style="--i:25;"></span>
+            <span style="--i:26;"></span>
+            <span style="--i:42;"></span>
+            <span style="--i:35;"></span>
+            <span style="--i:31;"></span>
+            <span style="--i:44;"></span>
+            <span style="--i:55;"></span>
+            <span style="--i:66;"></span>
+            <span style="--i:77;"></span>
+            <span style="--i:88;"></span>
+            <span style="--i:99;"></span>
+            <span style="--i:01;"></span>
+            <span style="--i:02;"></span>
+            <span style="--i:05;"></span>
+            <span style="--i:08;"></span>
+            <span style="--i:09;"></span>
+            <span style="--i:49;"></span>
         </div>
         <div id="processing" style="display: none;">Processando...</div>
     </div>
@@ -114,7 +116,7 @@
                     const a = document.createElement('a');
                     a.style.display = 'none';
                     a.href = url;
-                    a.download = file.name.replace(/\.[^/.]+$/, "") + '.pdf'; // Manter o nome original do arquivo e trocar a extensão
+                    a.download = file.name.replace(/\.[^/.]+$/, "") + '.pdf';
                     document.body.appendChild(a);
                     a.click();
                     window.URL.revokeObjectURL(url);
@@ -142,6 +144,7 @@
             }
 
             function handleDrop(e) {
+                preventDefaults(e);
                 const dt = e.dataTransfer;
                 const files = dt.files;
 
