@@ -2,14 +2,13 @@ const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
 const path = require('path');
-const XLSX = require('xlsx');
 const fs = require('fs');
-const upload = multer({ dest: 'uploads/' });
+const { convertToPDF } = require('./conversor/conversor.js');
 
 const app = express();
 const port = 3000;
 
-app.use(cors()); // Middleware CORS para permitir requisições de diferentes origens
+app.use(cors());
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -24,32 +23,23 @@ const storage = multer.diskStorage({
     }
 });
 
+const upload = multer({ storage: storage });
 
-// Rota para lidar com o upload e conversão de arquivos
-app.post('/upload', upload.single('file'), (req, res) => {
+app.post('/upload', upload.single('file'), async (req, res) => {
     if (!req.file) {
         return res.status(400).send('Nenhum arquivo selecionado. Por favor, selecione um arquivo para continuar.');
     }
     const filePath = req.file.path;
+    const originalName = path.basename(req.file.originalname, path.extname(req.file.originalname));
+    const outputPdfPath = path.join(path.dirname(filePath), `${originalName}.pdf`);
 
     try {
-        if (!fs.existsSync(filePath)) {
-            throw new Error('Arquivo não encontrado');
-        }
-
-        const workbook = XLSX.readFile(filePath);
-        const sheetNameList = workbook.SheetNames;
-        const jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetNameList[0]]);
-        
-        const jsonFilePath = filePath.replace(path.extname(filePath), '.json');
-        fs.writeFileSync(jsonFilePath, JSON.stringify(jsonData, null, 2));
-        
-        res.download(jsonFilePath, (err) => {
+        await convertToPDF(filePath, outputPdfPath);
+        res.download(outputPdfPath, (err) => {
             if (err) {
                 console.error(err);
             }
-            fs.unlinkSync(filePath);
-            fs.unlinkSync(jsonFilePath);
+            fs.unlinkSync(filePath); // Remove o arquivo de entrada após o download
         });
     } catch (error) {
         console.error('Erro ao processar o arquivo:', error);
