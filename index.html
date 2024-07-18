@@ -9,186 +9,178 @@
 </head>
 <body>
         <h1>Upload de Arquivos</h1>
-        <p class="upload-title" id="fileInfo">Arraste e solte um arquivo para selecionar</p>
+        <p class="upload-title" action="http://localhost:3000/upload" method="post" enctype="multipart/form-data" id="fileInfo">Arraste e solte um arquivo para selecionar</p>
         <form id="uploadForm" method="post">
             <input type="file" id="fileInput" style="display:none;">
-            <button id="button" style="--clr:#800000" type="submit"><span>Converter</span><i></i></button>
+            <button id="button" class="button" style="--clr:#800000" type="submit"><span>Converter</span><i></i></button>
         </form>
-    <div class="bubbles">
-        <span style="--i:11;"></span>
-        <span style="--i:14;"></span>
-        <span style="--i:21;"></span>
-        <span style="--i:33;"></span>
-        <span style="--i:87;"></span>
-        <span style="--i:54;"></span>
-        <span style="--i:16;"></span>
-        <span style="--i:52;"></span>
-        <span style="--i:13;"></span>
-        <span style="--i:20;"></span>
-        <span style="--i:57;"></span>
-        <span style="--i:25;"></span>
-        <span style="--i:26;"></span>
-        <span style="--i:42;"></span>
-        <span style="--i:35;"></span>
-        <span style="--i:31;"></span>
-        <span style="--i:44;"></span>
-        <span style="--i:55;"></span>
-        <span style="--i:66;"></span>
-        <span style="--i:77;"></span>
-        <span style="--i:88;"></span>
-        <span style="--i:99;"></span>
-        <span style="--i:01;"></span>
-        <span style="--i:02;"></span>
-        <span style="--i:05;"></span>
-        <span style="--i:08;"></span>
-        <span style="--i:09;"></span>
-        <span style="--i:49;"></span>
-        <span style="--i:11;"></span>
-        <span style="--i:14;"></span>
-        <span style="--i:21;"></span>
-        <span style="--i:33;"></span>
-        <span style="--i:87;"></span>
-        <span style="--i:54;"></span>
-        <span style="--i:16;"></span>
-        <span style="--i:52;"></span>
-        <span style="--i:13;"></span>
-        <span style="--i:20;"></span>
-        <span style="--i:57;"></span>
-        <span style="--i:25;"></span>
-        <span style="--i:26;"></span>
-        <span style="--i:42;"></span>
-        <span style="--i:35;"></span>
-        <span style="--i:31;"></span>
-        <span style="--i:44;"></span>
-        <span style="--i:55;"></span>
-        <span style="--i:66;"></span>
-        <span style="--i:77;"></span>
-        <span style="--i:88;"></span>
-        <span style="--i:99;"></span>
-        <span style="--i:01;"></span>
-        <span style="--i:02;"></span>
-        <span style="--i:05;"></span>
-        <span style="--i:08;"></span>
-        <span style="--i:09;"></span>
-        <span style="--i:49;"></span>
-    </div>
-    <div id="processing" style="display: none;">Processando...</div>
+        <div class="container">
+            <div class="bubbles">
+                <span style="--i:11;"></span>
+                <span style="--i:14;"></span>
+                <span style="--i:21;"></span>
+                <span style="--i:33;"></span>
+                <span style="--i:87;"></span>
+                <span style="--i:54;"></span>
+                <span style="--i:16;"></span>
+                <span style="--i:52;"></span>
+                <span style="--i:13;"></span>
+                <span style="--i:20;"></span>
+                <span style="--i:57;"></span>
+                <span style="--i:25;"></span>
+                <span style="--i:26;"></span>
+                <span style="--i:42;"></span>
+                <span style="--i:35;"></span>
+                <span style="--i:31;"></span>
+                <span style="--i:44;"></span>
+                <span style="--i:55;"></span>
+                <span style="--i:66;"></span>
+                <span style="--i:77;"></span>
+                <span style="--i:88;"></span>
+                <span style="--i:99;"></span>
+                <span style="--i:01;"></span>
+                <span style="--i:02;"></span>
+                <span style="--i:05;"></span>
+                <span style="--i:08;"></span>
+                <span style="--i:09;"></span>
+                <span style="--i:49;"></span>
+                <span style="--i:11;"></span>
+                <span style="--i:14;"></span>
+                <span style="--i:21;"></span>
+                <span style="--i:33;"></span>
+                <span style="--i:87;"></span>
+                <span style="--i:54;"></span>
+                <span style="--i:16;"></span>
+                <span style="--i:52;"></span>
+                <span style="--i:13;"></span>
+                <span style="--i:20;"></span>
+                <span style="--i:57;"></span>
+                <span style="--i:25;"></span>
+                <span style="--i:26;"></span>
+                <span style="--i:42;"></span>
+                <span style="--i:35;"></span>
+                <span style="--i:31;"></span>
+                <span style="--i:44;"></span>
+                <span style="--i:55;"></span>
+                <span style="--i:66;"></span>
+                <span style="--i:77;"></span>
+                <span style="--i:88;"></span>
+                <span style="--i:99;"></span>
+                <span style="--i:01;"></span>
+                <span style="--i:02;"></span>
+                <span style="--i:05;"></span>
+                <span style="--i:08;"></span>
+                <span style="--i:09;"></span>
+                <span style="--i:49;"></span>
+            </div>
+            <div id="processing" style="display: none;">Processando...</div>
+        </div>
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('uploadForm').addEventListener('submit', function(e) {
-                var fileInput = document.getElementById('fileInput');
-                if (fileInput.files.length === 0) { 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const uploadForm = document.getElementById('uploadForm');
+                const fileInput = document.getElementById('fileInput');
+                const fileInfo = document.getElementById('fileInfo');
+                const button = document.getElementById('button');
+                const processing = document.getElementById('processing');
+    
+                uploadForm.addEventListener('submit', function(e) {
                     e.preventDefault();
-                    alert('Nenhum arquivo selecionado');
-                }
-            });
-
-            function enviarArquivoParaConversao(file) {
-                const formData = new FormData();
-                formData.append('file', file);
-
-                fetch('http://localhost:3000/conversor', {
-                    method: 'POST',
-                    body: formData,
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
+                    if (fileInput.files.length === 0) {
+                        alert('Nenhum arquivo selecionado');
                     } else {
-                        alert('Arquivo enviado para conversão com sucesso!');
-                        window.location.href = '/?mensagem=Arquivo convertido com sucesso.';
+                        processing.style.display = 'block';
+                        enviarArquivoParaConversao(fileInput.files[0]);
                     }
-                    return response.blob();
-                })
-                .then(blob => {
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.style.display = 'none';
-                    a.href = url;
-                    a.download = 'converted.json';
-                    document.body.appendChild(a);
-                    a.click();
-                    window.URL.revokeObjectURL(url);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Não foi possível enviar o arquivo para a conversão.');
-                })
-                .finally(() => {
-                    processing.style.display = 'none';
                 });
-            }
-
-            function convertToPDF() {
-                const file = fileInput.files[0];
-                if (file) {
-                    processing.style.display = 'block';
-                    enviarArquivoParaConversao(file);
-                } else {
-                    alert('Nenhum arquivo selecionado.');
+    
+                function enviarArquivoParaConversao(file) {
+                    const formData = new FormData();
+                    formData.append('file', file);
+    
+                    fetch('http://localhost:3000/upload', {
+                        method: 'POST',
+                        body: formData,
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.blob();
+                    })
+                    .then(blob => {
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.style.display = 'none';
+                        a.href = url;
+                        a.download = file.name.replace(/\.[^/.]+$/, "") + '.pdf'; // Manter o nome original do arquivo e trocar a extensão
+                        document.body.appendChild(a);
+                        a.click();
+                        window.URL.revokeObjectURL(url);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Não foi possível enviar o arquivo para a conversão.');
+                    })
+                    .finally(() => {
+                        processing.style.display = 'none';
+                    });
                 }
-            }
-
-            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-                document.body.addEventListener(eventName, preventDefaults, false);
-            });
-
-            ['dragenter', 'dragover'].forEach(eventName => {
-                document.body.addEventListener(eventName, highlight, false);
-            });
-
-            ['dragleave', 'drop'].forEach(eventName => {
-                document.body.addEventListener(eventName, unhighlight, false);
-            });
-
-            document.body.addEventListener('drop', handleDrop, false);
-
-            button.addEventListener('click', convertToPDF);
-
-            fileInput.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    fileInfo.textContent = `Arquivo selecionado: ${file.name}`;
-                    button.style.display = 'block';
+    
+                function preventDefaults(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+    
+                function highlight() {
+                    document.body.classList.add('highlight');
+                }
+    
+                function unhighlight() {
+                    document.body.classList.remove('highlight');
+                }
+    
+                function handleDrop(e) {
+                    const dt = e.dataTransfer;
+                    const files = dt.files;
+    
+                    if (files.length > 0) {
+                        const file = files[0];
+                        fileInfo.textContent = `Arquivo selecionado: ${file.name}`;
+                        fileInput.files = files; // Set the files to the input
+                    }
+                }
+    
+                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                    document.body.addEventListener(eventName, preventDefaults, false);
+                });
+    
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    document.body.addEventListener(eventName, highlight, false);
+                });
+    
+                ['dragleave', 'drop'].forEach(eventName => {
+                    document.body.addEventListener(eventName, unhighlight, false);
+                });
+    
+                document.body.addEventListener('drop', handleDrop, false);
+    
+                fileInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        fileInfo.textContent = `Arquivo selecionado: ${file.name}`;
+                    }
+                });
+    
+                function verificarElementos(...elementos) {
+                    return elementos.every(el => el !== null);
+                }
+    
+                if (!verificarElementos(fileInfo, fileInput, button, processing)) {
+                    console.error('Um ou mais elementos não foram encontrados.');
                 }
             });
-
-            function preventDefaults(e) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
-
-            function highlight() {
-                document.body.classList.add('highlight');
-            }
-
-            function unhighlight() {
-                document.body.classList.remove('highlight');
-            }
-
-            function handleDrop(e) {
-                const dt = e.dataTransfer;
-                const files = dt.files;
-
-                if (files.length > 0) {
-                    file = files[0];
-                    fileInfo.textContent = `Arquivo selecionado: ${file.name}`;
-                    button.style.display = 'block';
-                }
-            }
-
-            // Verificar se todos os elementos necessários foram encontrados
-            if (!verificarElementos(fileInfo, fileInput, button, processing)) {
-                console.error('Um ou mais elementos não foram encontrados.');
-                return;
-            }
-
-            function verificarElementos(...elementos) {
-                return elementos.every(el => el !== null);
-            }
-        });
-    </script>
-</body>
-</html>
+        </script>
+    </body>
+    </html>
