@@ -73,7 +73,7 @@ body.highlight {
     background: #fff;
     color: var(--clr); /* Cor do texto alterada para contrastar com o fundo branco */
     letter-spacing: 0.25em;
-    box-shadow: 0 0 35px var(--clr); /* Sombra alterada para vermelho escuro */
+    box-shadow: 0 0 35px #fff; /* Sombra alterada para vermelho escuro */
 }
 
 .button::before {
