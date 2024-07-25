@@ -35,19 +35,22 @@ app.post('/upload', upload.single('file'), async (req, res) => {
     const outputPdfPath = path.join(path.dirname(filePath), `${originalName}.pdf`);
 
     try {
+        console.log(`Iniciando conversão para o arquivo: ${filePath}`);
         await convertToPDF(filePath, outputPdfPath);
+        console.log(`Conversão concluída. Iniciando download do arquivo: ${outputPdfPath}`);
         res.download(outputPdfPath, (err) => {
             if (err) {
-                console.error(err);
+                console.error(`Erro ao fazer o download do arquivo convertido: ${err}`);
                 res.status(500).send('Erro ao fazer o download do arquivo convertido.');
             } else {
                 fs.unlinkSync(filePath); // Remove o arquivo de entrada após o download
                 fs.unlinkSync(outputPdfPath); // Remove o arquivo PDF após o download
+                console.log(`Arquivos removidos: ${filePath}, ${outputPdfPath}`);
             }
         });
     } catch (error) {
-        console.error('Erro ao processar o arquivo:', error);
-        res.status(500).send('Erro ao processar o arquivo');
+        console.error(`Erro ao processar o arquivo: ${error}`);
+        res.status(500).send(`Erro ao processar o arquivo: ${error.message}`);
     }
 });
 
