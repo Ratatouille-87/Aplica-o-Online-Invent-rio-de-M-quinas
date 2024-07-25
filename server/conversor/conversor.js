@@ -1,6 +1,7 @@
 const fs = require('fs');
 const PDFDocument = require('pdfkit');
 const chardet = require('chardet'); // Biblioteca para detectar o encoding do arquivo
+const iconv = require('iconv-lite'); // Biblioteca para converter encodings
 
 async function convertToPDF(inputFilePath, outputPdfPath) {
     try {
@@ -9,13 +10,28 @@ async function convertToPDF(inputFilePath, outputPdfPath) {
             throw new Error('Arquivo de entrada não encontrado');
         }
 
-        // Lê o conteúdo do arquivo de entrada com encoding UTF-8
+        // Detecta o encoding do arquivo de entrada
+        const encoding = chardet.detectFileSync(inputFilePath);
+        console.log(`Encoding detectado: ${encoding}`);
+
+        // Lê o conteúdo do arquivo de entrada com o encoding detectado
         let originalContent;
         try {
-            originalContent = await fs.promises.readFile(inputFilePath, { encoding: 'utf8' });
+            const buffer = await fs.promises.readFile(inputFilePath);
+            if (encoding !== 'UTF-8' && encoding !== 'utf-8') {
+                originalContent = iconv.decode(buffer, encoding);
+            } else {
+                originalContent = buffer.toString('utf8');
+            }
         } catch (err) {
             throw new Error('Erro ao ler o arquivo de entrada. Verifique se o arquivo está no formato e encoding corretos.');
         }
+
+        // Verifica se o conteúdo original é válido
+        if (!originalContent) {
+            throw new Error('Conteúdo do arquivo de entrada está vazio ou é inválido.');
+        }
+
         // Cria um novo documento PDF
         const doc = new PDFDocument();
 
@@ -48,6 +64,7 @@ async function convertToPDF(inputFilePath, outputPdfPath) {
         if (fs.existsSync(outputPdfPath)) {
             fs.unlinkSync(outputPdfPath);
         }
+        console.error(`Erro ao converter arquivo para PDF: ${error.message}`);
         throw new Error(`Erro ao converter arquivo para PDF: ${error.message}`);
     }
 }
