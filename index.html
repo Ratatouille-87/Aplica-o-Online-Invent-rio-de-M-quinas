@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload de Arquivos</title>
     <link rel="stylesheet" href="Style.css">
+    <link rel="icon" href="icon.png">
 </head>
 <body>
     <h1>Upload de Arquivos</h1>
@@ -76,7 +77,7 @@
         </div>
         <div id="processing" style="display: none;">Processando...</div>  
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const uploadForm = document.getElementById('uploadForm');
@@ -84,6 +85,11 @@
             const fileInfo = document.getElementById('fileInfo');
             const button = document.getElementById('button');
             const processing = document.getElementById('processing');
+
+            if (!uploadForm || !fileInput || !fileInfo || !button || !processing) {
+                console.error('Um ou mais elementos não foram encontrados no DOM.');
+                return;
+            }
 
             uploadForm.addEventListener('submit', function(e) {
                 e.preventDefault();
