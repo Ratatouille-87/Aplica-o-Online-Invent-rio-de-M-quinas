@@ -1,13 +1,11 @@
 import { parentPort } from 'worker_threads';
+import { resolve } from 'path';
 
-parentPort.on('message', (data) => {
-    // Processa os dados recebidos
-    const result = processData(data);
-    // Envia o resultado de volta para o thread pai
-    parentPort.postMessage(result);
+parentPort.on('message', (filePath) => {
+    try {
+        const resolvedPath = resolve(filePath);
+        parentPort.postMessage(resolvedPath);
+    } catch (error) {
+        parentPort.postMessage({ error: error.message });
+    }
 });
-
-function processData(data) {
-    // Função para processar os dados
-    return data; // Exemplo de processamento
-}
