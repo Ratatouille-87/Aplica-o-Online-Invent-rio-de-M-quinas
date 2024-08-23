@@ -3,8 +3,7 @@ import cors from 'cors';
 import multer from 'multer';
 import { join, resolve, extname, basename, dirname } from 'path';
 import { existsSync, mkdirSync, unlinkSync, renameSync } from 'fs';
-import { Worker } from 'worker_threads';
-import { convertToPDF } from './conversor/conversor.js';
+import { convertToPDF } from './conversor/conversor.js'; // Corrigido para importar corretamente
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -33,69 +32,54 @@ const upload = multer({ storage: storage });
 
 app.post('/upload', upload.single('file'), async (req, res) => {
     if (!req.file) {
+        console.error('Nenhum arquivo selecionado.');
         return res.status(400).send('Nenhum arquivo selecionado. Por favor, selecione um arquivo para continuar.');
     }
+    
     const filePath = req.file.path;
     const originalName = req.file.originalname;
     const originalFilePath = join(dirname(filePath), originalName);
     const outputPdfPath = join(dirname(filePath), `${basename(originalName, extname(originalName))}.pdf`);
 
+    console.log(`File received: ${filePath}, ${originalName}`);
+
     try {
         console.log(`Iniciando conversão para o arquivo: ${filePath}`);
 
-        // Renomear o arquivo para o nome original
+        // Renomeia o arquivo
         renameSync(filePath, originalFilePath);
         console.log(`Arquivo renomeado para: ${originalFilePath}`);
 
-        const worker = new Worker(new URL('./workers/worker.js', import.meta.url)); // Certifique-se de que o caminho esteja correto
-        worker.postMessage(originalFilePath);
+        // Converte para PDF
+        await convertToPDF(originalFilePath);
 
-        worker.on('message', async (result) => {
-            try {
-                console.log(`Mensagem recebida do worker: ${result}`);
-                await convertToPDF(result, outputPdfPath);
-                console.log(`Conversão concluída. Iniciando download do arquivo: ${outputPdfPath}`);
-                res.download(outputPdfPath, (err) => {
-                    if (err) {
-                        console.error(`Erro ao fazer o download do arquivo convertido: ${err}`);
-                        res.status(500).send('Erro ao fazer o download do arquivo convertido.');
-                    } else {
-                        unlinkSync(originalFilePath);
-                        unlinkSync(outputPdfPath);
-                        console.log(`Arquivos removidos: ${originalFilePath}, ${outputPdfPath}`);
-                    }
-                });
-            } catch (error) {
-                console.error(`Erro ao processar o arquivo: ${error}`);
+        console.log(`Conversão concluída. Iniciando download do arquivo: ${outputPdfPath}`);
+
+        // Envia o arquivo PDF para download
+        res.download(outputPdfPath, (err) => {
+            if (err) {
+                console.error(`Erro ao fazer o download do arquivo convertido: ${err}`);
+                // Tenta remover arquivos em caso de erro
                 if (existsSync(originalFilePath)) unlinkSync(originalFilePath);
                 if (existsSync(outputPdfPath)) unlinkSync(outputPdfPath);
                 if (!res.headersSent) {
-                    res.status(500).send(`Erro ao processar o arquivo: ${error.message}`);
+                    res.status(500).send('Erro ao fazer o download do arquivo convertido.');
+                }
+            } else {
+                // Verifica e remove arquivos após o download ser concluído
+                try {
+                    if (existsSync(originalFilePath)) unlinkSync(originalFilePath);
+                    if (existsSync(outputPdfPath)) unlinkSync(outputPdfPath);
+                    console.log(`Arquivos removidos: ${originalFilePath}, ${outputPdfPath}`);
+                } catch (removeError) {
+                    console.error(`Erro ao remover arquivos: ${removeError}`);
                 }
             }
         });
-
-        worker.on('error', (error) => {
-            console.error(`Erro no worker: ${error}`);
-            if (existsSync(originalFilePath)) unlinkSync(originalFilePath);
-            if (existsSync(outputPdfPath)) unlinkSync(outputPdfPath);
-            if (!res.headersSent) {
-                res.status(500).send(`Erro no worker: ${error.message}`);
-            }
-        });
-
-        worker.on('exit', (code) => {
-            if (code !== 0) {
-                console.error(`Worker finalizado com código: ${code}`);
-                if (existsSync(originalFilePath)) unlinkSync(originalFilePath);
-                if (existsSync(outputPdfPath)) unlinkSync(outputPdfPath);
-                if (!res.headersSent) {
-                    res.status(500).send(`Worker finalizado com código: ${code}`);
-                }
-            }
-        });
+        
     } catch (error) {
         console.error(`Erro ao processar o arquivo: ${error}`);
+        // Tenta remover arquivos em caso de erro
         if (existsSync(originalFilePath)) unlinkSync(originalFilePath);
         if (existsSync(outputPdfPath)) unlinkSync(outputPdfPath);
         if (!res.headersSent) {
